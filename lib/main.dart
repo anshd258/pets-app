@@ -39,9 +39,12 @@ void main() async {
     ),
   );
 
+  final themeProvider = ThemeProvider();
+  await themeProvider.initialize();
+  
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    ChangeNotifierProvider.value(
+      value: themeProvider,
       child: PetAdoptionApp(repository: petRepository),
     ),
   );

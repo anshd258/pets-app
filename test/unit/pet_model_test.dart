@@ -9,15 +9,9 @@ void main() {
         'name': 'Max',
         'age': 3,
         'price': 250.0,
-        'breeds': {'primary': 'Labrador'},
+        'breed': 'Labrador',
         'description': 'Friendly dog',
-        'photos': [
-          {
-            'large': 'https://example.com/large.jpg',
-            'medium': 'https://example.com/medium.jpg',
-            'small': 'https://example.com/small.jpg',
-          }
-        ],
+        'imageUrl': 'https://example.com/large.jpg',
         'species': 'Dog',
         'gender': 'Male',
         'size': 'Large',
@@ -97,14 +91,14 @@ void main() {
       expect(pet.isAdopted, false);
       expect(pet.isFavorite, false);
       expect(pet.adoptedAt, null);
-      expect(pet.species, null);
-      expect(pet.gender, null);
-      expect(pet.size, null);
-      expect(pet.status, null);
+      expect(pet.species, 'Unknown');
+      expect(pet.gender, 'Unknown');
+      expect(pet.size, 'Medium');
+      expect(pet.status, 'adoptable');
     });
 
     test('should create a copy with updated fields', () {
-      final pet = const PetModel(
+      const pet = PetModel(
         id: '1',
         name: 'Max',
         age: 3,
@@ -112,6 +106,10 @@ void main() {
         breed: 'Labrador',
         description: 'Friendly dog',
         imageUrl: 'https://example.com/image.jpg',
+        species: 'Dog',
+        gender: 'Male',
+        size: 'Large',
+        status: 'adoptable',
       );
 
       final updatedPet = pet.copyWith(
@@ -128,7 +126,7 @@ void main() {
     });
 
     test('should compare two PetModel instances for equality', () {
-      final pet1 = const PetModel(
+      const pet1 = PetModel(
         id: '1',
         name: 'Max',
         age: 3,
@@ -136,9 +134,13 @@ void main() {
         breed: 'Labrador',
         description: 'Friendly dog',
         imageUrl: 'https://example.com/image.jpg',
+        species: 'Dog',
+        gender: 'Male',
+        size: 'Large',
+        status: 'adoptable',
       );
 
-      final pet2 = const PetModel(
+      const pet2 = PetModel(
         id: '1',
         name: 'Max',
         age: 3,
@@ -146,9 +148,13 @@ void main() {
         breed: 'Labrador',
         description: 'Friendly dog',
         imageUrl: 'https://example.com/image.jpg',
+        species: 'Dog',
+        gender: 'Male',
+        size: 'Large',
+        status: 'adoptable',
       );
 
-      final pet3 = const PetModel(
+      const pet3 = PetModel(
         id: '2',
         name: 'Bella',
         age: 2,
@@ -156,6 +162,10 @@ void main() {
         breed: 'Beagle',
         description: 'Playful dog',
         imageUrl: 'https://example.com/image2.jpg',
+        species: 'Dog',
+        gender: 'Female',
+        size: 'Small',
+        status: 'adoptable',
       );
 
       expect(pet1, equals(pet2));

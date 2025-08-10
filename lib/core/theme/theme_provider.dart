@@ -5,18 +5,44 @@ class ThemeProvider extends ChangeNotifier {
   static const String _themeBoxName = 'theme_preferences';
   static const String _themeModeKey = 'theme_mode';
   
-  late Box _themeBox;
+  Box? _themeBox;
   ThemeMode _themeMode = ThemeMode.system;
+  bool _isTestMode = false;
   
   ThemeMode get themeMode => _themeMode;
   
   ThemeProvider() {
-    _initTheme();
+    // Don't initialize in constructor - let the app or test set it up
+  }
+  
+  // Method for tests to set a mock box
+  void setTestBox(Box mockBox) {
+    _isTestMode = true;
+    _themeBox = mockBox;
+    final savedThemeMode = _themeBox?.get(_themeModeKey, defaultValue: 'system') ?? 'system';
+    
+    switch (savedThemeMode) {
+      case 'light':
+        _themeMode = ThemeMode.light;
+        break;
+      case 'dark':
+        _themeMode = ThemeMode.dark;
+        break;
+      default:
+        _themeMode = ThemeMode.system;
+    }
+  }
+  
+  // Initialize for production use
+  Future<void> initialize() async {
+    if (!_isTestMode) {
+      await _initTheme();
+    }
   }
   
   Future<void> _initTheme() async {
     _themeBox = await Hive.openBox(_themeBoxName);
-    final savedThemeMode = _themeBox.get(_themeModeKey, defaultValue: 'system');
+    final savedThemeMode = _themeBox?.get(_themeModeKey, defaultValue: 'system') ?? 'system';
     
     switch (savedThemeMode) {
       case 'light':
@@ -48,7 +74,7 @@ class ThemeProvider extends ChangeNotifier {
         break;
     }
     
-    await _themeBox.put(_themeModeKey, modeString);
+    await _themeBox?.put(_themeModeKey, modeString);
     notifyListeners();
   }
   
